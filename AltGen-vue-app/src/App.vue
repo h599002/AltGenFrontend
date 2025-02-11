@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1>AltGen Preview</h1>
-    <input type="file" @change="uploadImage">
+    <h1>AltGen API Test</h1>
+    
+    <input type="text" v-model="inputText" placeholder="Enter test text">
     <button @click="generateAltText">Generate Alt Text</button>
-    <h3>Generated Alt Text:</h3>
+
+    <h3>API Response:</h3>
     <p v-if="loading">Generating...</p>
     <p v-if="altText">{{ altText }}</p>
   </div>
@@ -14,40 +16,47 @@ import { ref } from "vue";
 
 export default {
   setup() {
-    const image = ref(null);
+    const inputText = ref(""); // Stores the user input text
     const altText = ref("");
     const loading = ref(false);
 
-    function uploadImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        image.value = reader.result.split(",")[1];
-      };
-    }
-
     async function generateAltText() {
-      if (!image.value) {
-        alert("Please upload an image first.");
+      console.log("Generating alt text...");
+      if (!inputText.value.trim()) {
+        alert("Please enter some text first.");
         return;
       }
+
+      console.log("Sending request to API...");
+
       loading.value = true;
+      try{
+        const response = await fetch("http://localhost:5256/api/Test/google/gemini-flash-1.5-8b", { // Replace with correct API URL
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "*/*" },
+          body: JSON.stringify({ prompt: inputText.value }) // Sending text instead of image
+        });
 
-      const response = await fetch("https://your-dotnet-api.com/api/generate-alt-text", { // TODO replace with your API URL
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: image.value })
-      });
+        console.log("Request sent, waiting for response...");
+        
+        if(!response.ok){
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      const data = await response.json();
-      altText.value = data.altText;
-      loading.value = false;
+        const data = await response.json();
+        console.log("Response received:", data); // ✅ Debugging
+        altText.value = data.response || "No response received";
+        loading.value = false;
+      } catch (error) {
+        console.error(error);
+        altText.value = "An error occurred. Please try again.";
+      } 
+      finally {
+        loading.value = false;
+      }
+    
     }
-
-    return { uploadImage, generateAltText, altText, loading };
-  }
+    return { inputText, generateAltText, altText, loading };
+  }, 
 };
-</script>
+</script> 
