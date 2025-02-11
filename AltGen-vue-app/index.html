@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltGen Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <h1>AltGen Image Tagging Preview</h1>
+        <input type="file" @change="uploadImage">
+        <button @click="generateAltText">Generate Alt Text</button>
+
+        <h3>Generated Alt Text:</h3>
+        <p v-if="loading">Generating...</p>
+        <p v-if="altText">{{ altText }}</p>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return { image: null, altText: "", loading: false };
+            },
+            methods: {
+                uploadImage(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        this.image = reader.result.split(",")[1]; // Strip "data:image/png;base64,"
+                    };
+                },
+                async generateAltText() {
+                    if (!this.image) {
+                        alert("Please upload an image first.");
+                        return;
+                    }
+                    this.loading = true;
+                    
+                    const response = await fetch("https://your-dotnet-api.com/api/generate-alt-text", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ image: this.image })
+                    });
+
+                    const data = await response.json();
+                    this.altText = data.altText;
+                    this.loading = false;
+                }
+            }
+        });
+
+        app.mount("#app");
+    </script>
+
+</body>
+</html>
