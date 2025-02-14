@@ -2,6 +2,7 @@
 
 ## Technology
 *This project is using vue to make frontend and connect to our .NET API*
+At this instant it is only running on localhost, but as a proof of concept and a prototype it works
 
 # 🚀 Running the Project Locally
 
