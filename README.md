@@ -1,7 +1,7 @@
 # AltGen frontend repository
 
 ## Technology
-*This project is using vue to make frontend and connect to our .NET API*
+*This project is using vue to make frontend and connect to our .NET API* /n
 At this instant it is only running on localhost, but as a proof of concept and a prototype it works
 
 # 🚀 Running the Project Locally
@@ -29,7 +29,7 @@ git clone https://github.com/h599002/AltGenFrontend.git
 cd AltGenFrontend
 ```
 ## **3️⃣ Install Dependencies**
-Run the following command to install all required packages:
+Run the following command to install all required packages: /n
 Navigate into *AltGenFrontend* and *AltGen-vue-app*
 ```sh
 cd AltGenFrontEnd
@@ -44,7 +44,7 @@ Start the local development server:
 ``` sh
 npm run dev
 ```
-After running this command, the console will display a local server URL (hopefully http://localhost:5173/, if not, our REST API wont accept it per feb 25). 
+After running this command, the console will display a local server URL (hopefully http://localhost:5173/, if not, our REST API wont accept it per feb 25). /n
 Open it in your browser.
 
 ## **5️⃣ Project Structure**
