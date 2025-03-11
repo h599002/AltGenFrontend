@@ -3,6 +3,14 @@
     <h1>AltGen API Test</h1>
     
     <input type="text" v-model="inputText" placeholder="Enter test text">
+    
+    <select v-model="selectedApi">
+      <option value="google/gemini-flash-1.5-8b">Google Gemini</option>
+      <option value="openai/gpt-4o-mini">OpenAI GPT-4</option>
+      <option value="meta-llama/llama-3.3-70b-instruct">Meta Llama</option>
+      <option value="deepseek/deepseek-r1">DeepSeek</option>
+    </select>
+
     <button @click="generateAltText">Generate Alt Text</button>
 
     <h3>API Response:</h3>
@@ -19,6 +27,7 @@ export default {
     const inputText = ref(""); // Stores the user input text
     const altText = ref("");
     const loading = ref(false);
+    const selectedApi = ref("google/gemini-flash-1.5-8b");
 
     async function generateAltText() {
       console.log("Generating alt text...");
@@ -30,8 +39,12 @@ export default {
       console.log("Sending request to API...");
 
       loading.value = true;
+
+      const apiBaseUrl = "http://localhost:5256/api/Test/";
+      const url = `${apiBaseUrl}${selectedApi.value}`;
+
       try{
-        const response = await fetch("http://localhost:5256/api/Test/google/gemini-flash-1.5-8b", { // Replace with correct API URL
+        const response = await fetch(url, { // Replace with correct API URL
           method: "POST",
           headers: { "Content-Type": "application/json", "Accept": "*/*" },
           body: JSON.stringify({ prompt: inputText.value }) // Sending text instead of image
