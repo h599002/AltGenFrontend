@@ -1,14 +1,14 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 /**
  * Store for managing application settings including temperature, max length, prompt template, and model selection.
  */
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
-    temperature: 0.7,
-    maxLength: 200,
+    temperature: 1.0,
+    //maxLength: 200,
     prompt: 'Generate a descriptive alt text for this image that is clear and concise.',
-    selectedModel: 'google/gemini-flash-1.5-8b'
+    selectedModel: 'ChatGpt4_1'
   }),
 
   actions: {
@@ -22,15 +22,15 @@ export const useSettingsStore = defineStore('settings', {
       this.temperature = value
     },
 
-    /**
-     * Updates the maximum length setting for generated text.
-     * Controls how long the generated alt text can be.
-     * 
-     * @param {number} value - The maximum length value to set
-     */
-    updateMaxLength(value: number) {
-      this.maxLength = value
-    },
+    // /**
+    //  * Updates the maximum length setting for generated text.
+    //  * Controls how long the generated alt text can be.
+    //  * 
+    //  * @param {number} value - The maximum length value to set
+    //  */
+    // updateMaxLength(value: number) {
+    //   this.maxLength = value
+    // },
 
     /**
      * Updates the prompt template used for text generation.

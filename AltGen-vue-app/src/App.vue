@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-3xl font-bold text-white">AltGen</h1>
     </div>
-    
+    </div>  
     <!-- Main Interface -->
     <div class="bg-white/10 backdrop-blur-sm rounded-lg shadow-md p-6">
       <div class="space-y-4">
@@ -199,12 +199,12 @@ async function analyzeImage() {
 
   try {
     const formData = new FormData();
-    formData.append("image", selectedFile.value);
+    formData.append("Image", selectedFile.value);
 
 // 👇 Use dynamic values from settings store
-formData.append("model", settings.selectedModel);
-formData.append("prompt", settings.prompt || "");
-formData.append("temperature", settings.temperature.toString());
+formData.append("Model", settings.selectedModel);
+formData.append("Prompt", settings.prompt || "");
+formData.append("Temperature", settings.temperature.toString('en-US', { useGrouping: false }));
 
 
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/cnn-llm/predict`, formData, {
