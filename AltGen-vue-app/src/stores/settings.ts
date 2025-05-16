@@ -8,7 +8,8 @@ export const useSettingsStore = defineStore('settings', {
     temperature: 1.0,
     //maxLength: 200,
     prompt: 'Generate a descriptive alt text for this image that is clear and concise.',
-    selectedModel: 'ChatGpt4_1'
+    selectedModel: 'ChatGpt4_1',
+    useCognitiveLayer: true
   }),
 
   actions: {

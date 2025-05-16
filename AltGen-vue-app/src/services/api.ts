@@ -31,18 +31,6 @@ interface ErrorResponse {
   message: string;
 }
 
-// API endpoints grouped by service
-export const googleApi = {
-};
-
-export const replicateApi = {
-  // Add your replicate endpoints here
-};
-
-export const llmApi = {
-  // Add your LLM endpoints here
-};
-
 export const cnnApi = {
   analyzeImage: (imageUrl: string) => 
     api.post(`/api/cnn-llm/predict`, null, { params: { imageUrl } }),

@@ -74,6 +74,18 @@
             ></textarea>
           </div>
         </div>
+        <!-- CNN Toggle -->
+        <div class="mb-4 flex items-center gap-2">
+  <input
+    type="checkbox"
+    v-model="settings.useCognitiveLayer"
+    class="form-checkbox h-4 w-4 text-blue-600"
+    id="use-cnn-toggle"
+  />
+  <label for="use-cnn-toggle" class="text-sm font-medium text-gray-300">
+    Use Cognitive Layer (CNN)
+  </label>
+</div>
 
         <!-- Model Selection -->
         <div class="mb-4">
@@ -98,10 +110,28 @@
 import { useSettingsStore } from '../stores/settings'
 import { ref } from 'vue'
 
+/**
+ * Store instance for managing application settings
+ * @type {import('../stores/settings').SettingsStore}
+ */
 const settings = useSettingsStore()
+
+/**
+ * Controls the visibility of the settings panel
+ * @type {import('vue').Ref<boolean>}
+ */
 const showSettings = ref(false)
+
+/**
+ * Controls the visibility of the custom prompt input
+ * @type {import('vue').Ref<boolean>}
+ */
 const showCustomPrompt = ref(false)
 
+/**
+ * Available AI models for image analysis
+ * @type {Array<{name: string, value: string}>}
+ */
 const models = [
   { name: 'OpenAI GPT-4.1', value: 'ChatGpt4_1' },
   { name: 'OpenAI GPT-4o-mini', value: 'ChatGpt4_1Mini'},
@@ -125,6 +155,10 @@ const models = [
   { name: 'Microsoft Phi-4', value: 'MicrosoftPhi4MultimodalInstruct'}
 ]
 
+/**
+ * Predefined prompt templates for image analysis
+ * @type {Array<{name: string, value: string}>}
+ */
 const promptTemplates = [
   { name: 'Default', value: '' },
   { name: 'Detailed', value: 'Create a detailed alt text for this image that describes the visual elements and their relationships.' },
@@ -132,6 +166,11 @@ const promptTemplates = [
   { name: 'Custom Template', value: '' }
 ]
 
+/**
+ * Handles prompt template selection and custom prompt visibility
+ * @param {Event} event - The select element change event
+ * @returns {void}
+ */
 function handlePromptChange(event: Event) {
   const select = event.target as HTMLSelectElement
   const selectedTemplate = promptTemplates.find(t => t.value === select.value)
@@ -143,8 +182,17 @@ function handlePromptChange(event: Event) {
   }
 }
 
+/**
+ * Toggles the settings panel visibility
+ * @returns {void}
+ */
 function toggleSettings() {
   showSettings.value = !showSettings.value
+}
+
+// Set default cognitive layer state
+if (!settings.useCognitiveLayer) {
+  settings.useCognitiveLayer = true;
 }
 </script>
 

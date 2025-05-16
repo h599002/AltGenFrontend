@@ -1,3 +1,4 @@
+
 <template>
   <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-8">
@@ -53,6 +54,10 @@
               >
                 Remove image
               </button>
+              <p class="text-sm text-gray-400 text-center">
+  Mode: <span class="font-semibold">{{ settings.useCognitiveLayer ? 'CNN + LLM' : 'LLM Only' }}</span>
+</p>
+
             </div>
           </div>
         </div>
@@ -108,12 +113,46 @@ import axios from "axios";
 import { useSettingsStore } from './stores/settings';
 import Settings from './components/Settings.vue';
 
+/**
+ * Store instance for managing application settings
+ * @type {import('./stores/settings').SettingsStore}
+ */
 const settings = useSettingsStore();
+
+/**
+ * Reference to the file input element
+ * @type {import('vue').Ref<HTMLInputElement | null>}
+ */
 const fileInput = ref<HTMLInputElement | null>(null);
+
+/**
+ * Base64 encoded preview of the selected image
+ * @type {import('vue').Ref<string | null>}
+ */
 const selectedImage = ref<string | null>(null);
-const selectedFile = ref<File | null>(null); 
+
+/**
+ * The actual file object selected by the user
+ * @type {import('vue').Ref<File | null>}
+ */
+const selectedFile = ref<File | null>(null);
+
+/**
+ * Loading state for the analysis process
+ * @type {import('vue').Ref<boolean>}
+ */
 const loading = ref(false);
+
+/**
+ * Error message if analysis fails
+ * @type {import('vue').Ref<string | null>}
+ */
 const error = ref<string | null>(null);
+
+/**
+ * Analysis results from the AI model
+ * @type {import('vue').Ref<{altText: string; aircraft: string; confidence: number} | null>}
+ */
 const results = ref<{
   altText: string;
   aircraft: string;
@@ -121,7 +160,9 @@ const results = ref<{
 } | null>(null);
 
 /**
- * Downscales an image and stores both the file and preview
+ * Handles file selection and creates a preview
+ * @param {Event} event - The file input change event
+ * @returns {Promise<void>}
  */
 async function handleFileSelect(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -137,7 +178,9 @@ async function handleFileSelect(event: Event) {
 }
 
 /**
- * Downscale for preview only — actual file is kept as-is for upload
+ * Creates a downscaled preview of the selected image
+ * @param {File} file - The image file to downscale
+ * @returns {Promise<string>} Base64 encoded preview image
  */
 function downscaleImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -175,7 +218,8 @@ function downscaleImage(file: File): Promise<string> {
 }
 
 /**
- * Remove selected file/image
+ * Removes the selected image and resets the form
+ * @returns {void}
  */
 function removeImage() {
   selectedFile.value = null;
@@ -185,7 +229,8 @@ function removeImage() {
 }
 
 /**
- * Submit form to backend
+ * Submits the image for analysis to the backend
+ * @returns {Promise<void>}
  */
 async function analyzeImage() {
   if (!selectedFile.value) {
@@ -198,18 +243,20 @@ async function analyzeImage() {
   results.value = null;
 
   try {
-    const formData = new FormData();
-    formData.append("Image", selectedFile.value);
+    const endpoint = settings.useCognitiveLayer
+  ? "/api/cnn-llm/predict"
+  : "/api/llm/process-form";
 
-// 👇 Use dynamic values from settings store
+const formData = new FormData();
+formData.append("Image", selectedFile.value);
 formData.append("Model", settings.selectedModel);
 formData.append("Prompt", settings.prompt || "");
-formData.append("Temperature", settings.temperature.toString('en-US', { useGrouping: false }));
+formData.append("Temperature", settings.temperature.toString());
 
 
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/cnn-llm/predict`, formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
+const response = await axios.post(`${import.meta.env.VITE_API_URL}${endpoint}`, formData, {
+  headers: { "Content-Type": "multipart/form-data" }
+});
 
     results.value = {
       altText: response.data.response ?? "No alt text returned.",
