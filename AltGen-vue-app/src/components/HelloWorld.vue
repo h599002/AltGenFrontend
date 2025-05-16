@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from '@vue/runtime-core'
 
 defineProps<{ msg: string }>()
 
@@ -38,4 +38,4 @@ const count = ref(0)
 .read-the-docs {
   color: #888;
 }
-</style>
+</style> 

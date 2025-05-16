@@ -1,8 +1,113 @@
-# AltGen frontend repository
+# AltGen Frontend
 
-## Technology
-*This project is using vue to make frontend and connect to our .NET API* \
-At this instant it is only running on localhost, but as a proof of concept and a prototype it works
+A Vue.js frontend for the AltGen project, providing an accessible interface for generating alt text for images using various AI models.
+
+## Project Structure
+
+```
+AltGen-vue-app/
+├── src/
+│   ├── components/
+│   │   ├── Settings.vue           # Settings panel component for model selection and parameters
+│   │   └── HelloWorld.vue         # Example component (can be removed)
+│   ├── stores/
+│   │   └── settings.ts            # Pinia store for managing application settings
+│   ├── services/
+│   │   └── api.ts                 # API service layer for backend communication
+│   ├── App.vue                    # Main application component
+│   └── style.css                  # Global styles
+├── public/                        # Static assets
+└── package.json                   # Project dependencies and scripts
+```
+
+## Component Documentation
+
+### App.vue
+Main application component that handles:
+- Image upload and preview
+- Drag and drop functionality
+- Image analysis requests
+- Results display
+- WCAG-compliant UI elements
+
+Key features:
+- Accessible file upload with keyboard support
+- Image preview with downscaling
+- Loading states with ARIA announcements
+- Error handling with accessible messages
+- Results display with semantic HTML
+
+### Settings.vue
+Settings panel component that manages:
+- Model selection
+- Temperature control
+- Prompt template selection
+- Custom prompt input
+
+Features:
+- Slide-in panel design
+- Accessible form controls
+- Real-time parameter updates
+- Model selection dropdown
+- Temperature slider with visual feedback
+
+### settings.ts (Pinia Store)
+State management for application settings:
+- Temperature control (0-2)
+- Model selection
+- Prompt templates
+- Cognitive layer toggle
+- State persistence
+
+### api.ts
+API service layer that handles:
+- Backend communication
+- Request/response types
+- Error handling
+- API endpoint configuration
+
+## Accessibility Features
+
+The application implements WCAG 2.1 guidelines with:
+- ARIA labels and roles
+- Keyboard navigation
+- Focus management
+- Screen reader support
+- High contrast mode
+- Error handling
+- Loading states
+- Semantic HTML structure
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Install required development dependencies
+npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## Environment Variables
+
+Create a `.env` file with:
+```
+VITE_API_URL=your_backend_url
+```
+
+## Dependencies
+
+- Vue 3
+- Pinia (State Management)
+- Axios (HTTP Client)
+- TailwindCSS (Styling)
+- TypeScript
 
 # 🚀 Running the Project Locally
 
@@ -38,6 +143,8 @@ cd AltGen-vue-app
 Then install required packages:
 ``` sh
 npm install
+npm install Pinia
+npm install -D tailwindcss postcss autoprefixer @tailwindcss/postcss
 ```
 ## **4️⃣ Run the Development Server**
 Start the local development server:
@@ -48,18 +155,95 @@ After running this command, the console will display a local server URL (hopeful
 Open it in your browser.
 
 ## **5️⃣ Project Structure**
-```text
-AltGenFrontend/
-AltGen-vue-app/
-│── src/                 # Source code
-│   ├── components/      # Vue components
-│   ├── views/           # Application views/pages
-│   ├── assets/          # Static assets
-│── public/              # Public static files
-│── package.json         # Project dependencies & scripts
-│── vite.config.js       # Vite configuration
-│── README.md            # Project documentation
 ```
+AltGen-vue-app/
+├── src/
+│   ├── components/
+│   │   ├── Settings.vue           # Settings panel component for model selection and parameters
+│   │   └── HelloWorld.vue         # Example component (can be removed)
+│   ├── stores/
+│   │   └── settings.ts            # Pinia store for managing application settings
+│   ├── services/
+│   │   └── api.ts                 # API service layer for backend communication
+│   ├── App.vue                    # Main application component
+│   └── style.css                  # Global styles
+├── public/                        # Static assets
+└── package.json                   # Project dependencies and scripts
+```
+
+## Component Documentation
+
+### App.vue
+Main application component that handles:
+- Image upload and preview
+- Drag and drop functionality
+- Image analysis requests
+- Results display
+- WCAG-compliant UI elements
+
+Key features:
+- Accessible file upload with keyboard support
+- Image preview with downscaling
+- Loading states with ARIA announcements
+- Error handling with accessible messages
+- Results display with semantic HTML
+
+### Settings.vue
+Settings panel component that manages:
+- Model selection
+- Temperature control
+- Prompt template selection
+- Use cognitive layer
+- Custom prompt input
+
+Features:
+- Slide-in panel design
+- Accessible form controls
+- Real-time parameter updates
+- Model selection dropdown
+- Temperature slider with visual feedback
+
+### settings.ts (Pinia Store)
+State management for application settings:
+- Temperature control (0-2)
+- Model selection
+- Prompt templates
+- Cognitive layer toggle
+- State persistence
+
+### api.ts
+API service layer that handles:
+- Backend communication
+- Request/response types
+- Error handling
+- API endpoint configuration
+
+## Accessibility Features
+
+The application implements WCAG 2.1 guidelines with:
+- ARIA labels and roles
+- Keyboard navigation
+- Focus management
+- Screen reader support
+- High contrast mode
+- Error handling
+- Loading states
+- Semantic HTML structure
+
+## Environment Variables
+
+Create a `.env` file with:
+```
+VITE_API_URL=your_backend_url
+```
+
+## Dependencies
+
+- Vue 3
+- Pinia (State Management)
+- Axios (HTTP Client)
+- TailwindCSS (Styling)
+- TypeScript
 
 ## **6️⃣ Additional Commands**
 | Command           | Description                      |
