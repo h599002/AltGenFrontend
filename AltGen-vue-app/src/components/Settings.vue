@@ -7,6 +7,8 @@
         @click="toggleSettings" 
         class="settings-icon bg-gray-800/60 hover:bg-gray-800/80 p-3 rounded-full shadow-lg transition duration-200"
         aria-label="Open Settings"
+        :aria-expanded="showSettings"
+        aria-controls="settings-panel"
       >
         <span aria-hidden="true">⚙️</span>
         <span class="sr-only"> Settings</span>
@@ -18,9 +20,15 @@
 
     <!-- Slide-In Panel -->
     <transition name="slide">
-      <aside v-if="showSettings" class="settings-panel" role="dialog" aria-label="Settings Panel">
+      <aside v-if="showSettings" 
+        class="settings-panel" 
+        role="dialog" 
+        aria-label="Settings Panel"
+        id="settings-panel"
+        aria-modal="true"
+      >
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-semibold text-white">Settings</h2>
+          <h2 id="settings-heading" tabindex="-1" class="text-xl font-semibold text-white">Settings</h2>
           <button 
             @click="toggleSettings" 
             class="text-white hover:text-gray-300 focus:outline-none"
@@ -43,10 +51,14 @@
             step="0.1"
             v-model="settings.temperature"
             class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+            aria-valuemin="0"
+            aria-valuemax="2"
+            :aria-valuenow="settings.temperature"
+            aria-valuetext="Temperature: ${settings.temperature}"
           />
           <div class="flex justify-between text-xs text-gray-400">
             <span>Conservative</span>
-            <span>Creative</span>
+            <span> - Creative</span>
           </div>
         </div>
 
@@ -58,6 +70,7 @@
           <select
             @change="handlePromptChange"
             class="w-full bg-gray-900 text-white rounded-lg px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Select prompt template"
           >
             <option v-for="template in promptTemplates" :key="template.name" :value="template.value">
               {{ template.name }}
@@ -71,6 +84,7 @@
               rows="3"
               class="w-full bg-gray-900 text-white rounded-lg px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none"
               placeholder="Enter your custom prompt template..."
+              aria-label="Custom prompt template"
             ></textarea>
           </div>
         </div>
@@ -108,7 +122,7 @@
 
 <script setup lang="ts">
 import { useSettingsStore } from '../stores/settings'
-import { ref } from 'vue'
+import { nextTick, ref, onMounted, onUnmounted } from 'vue'
 
 /**
  * Store instance for managing application settings
@@ -187,8 +201,33 @@ function handlePromptChange(event: Event) {
  * @returns {void}
  */
 function toggleSettings() {
-  showSettings.value = !showSettings.value
+  showSettings.value = !showSettings.value;
+  if(showSettings.value) {
+    nextTick(() =>  {
+      const el = document.getElementById('settings-heading')
+      el?.focus();
+    });
+  }
 }
+
+/**
+ * Handles escape key press to close settings panel
+ * @param {KeyboardEvent} e - The keyboard event
+ * @returns {void}
+ */
+function handleEscape(e: KeyboardEvent) {
+  if (e.key === 'Escape' && showSettings.value) {
+    toggleSettings();
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleEscape);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleEscape);
+});
 
 // Set default cognitive layer state
 if (!settings.useCognitiveLayer) {
@@ -221,14 +260,14 @@ if (!settings.useCognitiveLayer) {
   right: 0;
   height: 100vh;
   width: 320px;
-  background: rgba(30, 41, 59, 0.95);
+  background: rgba(30, 41, 59, 0.98);
   backdrop-filter: blur(12px);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.4);
   padding: 1.5rem;
   z-index: 1001;
   overflow-y: auto;
   color: white;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .overlay {
@@ -237,7 +276,7 @@ if (!settings.useCognitiveLayer) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 
@@ -248,5 +287,53 @@ if (!settings.useCognitiveLayer) {
   z-index: 1100;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+/* WCAG 2.1 AA compliant text colors */
+.text-gray-300 {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.text-gray-400 {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Ensure form controls meet contrast requirements */
+.bg-gray-900 {
+  background-color: rgb(17, 24, 39);
+}
+
+.border-gray-700 {
+  border-color: rgba(55, 65, 81, 0.9);
+}
+
+/* Ensure focus states meet contrast requirements */
+.focus\:ring-blue-500:focus {
+  --tw-ring-color: rgb(59, 130, 246);
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .settings-panel {
+    border: 1px solid CanvasText;
+  }
+  
+  .settings-icon {
+    border: 1px solid ButtonText;
+  }
+  
+  input[type="range"] {
+    border: 1px solid ButtonText;
+  }
+}
+
+/* Ensure disabled states meet contrast requirements */
+button:disabled {
+  opacity: 0.7;
+}
+
+/* Ensure placeholder text meets contrast requirements */
+::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 </style>

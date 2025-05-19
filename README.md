@@ -52,7 +52,7 @@ Start the local development server:
 ``` sh
 npm run dev
 ```
-After running this command, the console will display a local server URL (hopefully http://localhost:5173/, if not, our REST API wont accept it per feb 25). \
+After running this command, the console will display a local server URL http://localhost:5173/ 
 Open it in your browser.
 
 ## **5️⃣ Project Structure**
