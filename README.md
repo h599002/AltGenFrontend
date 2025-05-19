@@ -131,13 +131,6 @@ The application implements WCAG 2.1 guidelines with:
 - Loading states
 - Semantic HTML structure
 
-## Dependencies
-
-- Vue 3
-- Pinia (State Management)
-- Axios (HTTP Client)
-- TailwindCSS (Styling)
-- TypeScript
 
 ## **6️⃣ Additional Commands**
 | Command           | Description                      |
